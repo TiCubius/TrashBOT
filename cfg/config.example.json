@@ -1,4 +1,7 @@
-var config = {};
-
-config.discord.email 	= "YOUR DISCORD'S BOT EMAIL";
-config.discord.password = "YOUR DISCORD'S BOT PASSWORD";
+{
+	"discord":
+	{
+		"username": "DISCORD BOT'S USERNAME",
+		"password": "DISCORD BOT'S PASSWORD"
+	}
+}
