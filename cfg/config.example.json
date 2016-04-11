@@ -1,7 +1,20 @@
 {
 	"discord":
 	{
-		"username": "DISCORD BOT'S USERNAME",
-		"password": "DISCORD BOT'S PASSWORD"
+		"username": "",
+		"password": ""
+	},
+
+	"mysql":
+	{
+		"hostname": "",
+		"database": "",
+		"username": "",
+		"password": ""
+	},
+
+	"youtube":
+	{
+		"key": ""
 	}
 }
