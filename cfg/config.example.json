@@ -1,0 +1,4 @@
+var config = {};
+
+config.discord.email 	= "YOUR DISCORD'S BOT EMAIL";
+config.discord.password = "YOUR DISCORD'S BOT PASSWORD";
