@@ -1,5 +1,6 @@
-var discord			= require('discord.js');
 var mysql			= require('mysql');
+var moment 			= require('moment');
+var discord			= require('discord.js');
 var YouTube 		= require('youtube-node');
 var config			= require('./cfg/config.json');
 var achievements 	= require('./cfg/achievements.json');
@@ -25,17 +26,17 @@ bot.on("message", function(message){
 		clearChat(message);
 	}
 
-	if(command[0] === "/video:youtube")
+	if(command[0] === "/video:add")
 	{
-		if(command[1] === "add")
-		{
-			videoYoutubeAdd(message, command[2]);
-		}
-		if(command[1] === "get")
-		{
-			videoYoutubeGet(message, message.content.replace('/video:youtube get', '').substr(1));
-		}
+		videoYoutubeAdd(message, command[1]);
+
 	}
+
+	if(command[0] === "/video:get")
+	{
+		videoYoutubeGet(message, message.content.replace('/video:get', '').substr(1));
+	}
+
 });
 bot.login(config.discord.username, config.discord.password);
 mysqlConnect.connect();
@@ -83,7 +84,7 @@ function videoYoutubeAdd(message, url)
 		else
 		{
 			console.log(result.items[0].snippet);
-			mysqlConnect.query("INSERT INTO youtube_video SET id=?, title=?, username=?, url=?, created_at=?, created_by=?", ['', result.items[0].snippet.title, result.items[0].snippet.channelTitle, url, '', message.author.username]);
+			mysqlConnect.query("INSERT INTO youtube_video SET id=?, title=?, username=?, url=?, created_at=?, created_by=?", ['', result.items[0].snippet.title, result.items[0].snippet.channelTitle, url, moment().format("DD/MM/YYYY"), message.author.username]);
 		}
 	});
 
