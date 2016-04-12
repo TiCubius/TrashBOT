@@ -13,8 +13,8 @@
 		"password": ""
 	},
 
-	"youtube":
-	{
-		"key": ""
-	}
+	"youtube": 
+	{ 
+		"key": "" 
+	} 
 }
