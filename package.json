@@ -1,0 +1,26 @@
+{
+  "name": "discord-bot",
+  "version": "1.0.2",
+  "description": "DISCORD-BOT",
+  "main": "bot.js",
+  "dependencies": {
+    "discord.js": "^6.1.0",
+    "moment": "^2.12.0",
+    "mysql": "^2.10.2",
+    "youtube-node": "^1.3.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TiCubius/discord-bot.git"
+  },
+  "author": "TiCubius",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TiCubius/discord-bot/issues"
+  },
+  "homepage": "https://github.com/TiCubius/discord-bot#readme"
+}
