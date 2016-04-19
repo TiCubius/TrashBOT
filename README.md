@@ -1,11 +1,17 @@
-## DISCORD-BOT
-Using [discordjs](https://github.com/hydrabolt/discord.js), I created a little bot for Discord.
+## INFORMATIONS
+This is my first NODEJS project.
+It may be bad written and will most probably crash at some point.
+**You most probably don't want to use it but you can still use parts of this though.**
 
-Functions:
-- /clear:chat 			-> Clear the current channel's chat.
-- /get:achievements 	-> get a random achievement from cfg/achievements.json
-- /video:add [VIDEOURL] -> add a new video into the database
-- /video:get [TITLE] 	-> get a video from the database, based on the title
+### UTILIZATION
+To use this, you need to put in the config/config.json file : 
+- A discord account
+- A MySQL/Maria database (table: youtube_video which contains id, title, username, url, created_at, created_by)
+- An YouTube API key
 
-It's not much, it's very bad and I'm not proud of it. So let's put it on github.
-*(Also, my first try on NodeJS)...*
+### COMMANDS
+- /video:get [[USERNAME]] TITLE
+- /video:get TITLE
+- /video:add url
+- /chat:clear
+- /clear:chat
