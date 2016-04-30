@@ -1,34 +1,19 @@
 // --| DISCORD-BOT/youtube/video.js
 // -| AUTHOR: TiCubius
-// -| VERSION: 1.10 [17/04/2016]
+// -| VERSION: 1.11 [17/04/2016]
 
 var config 	= require('../../config/config.json');
 var mysql 	= require('mysql');
 var moment  = require('moment');
 var youtube = require('youtube-node');
 
-var YTVideo = function() {};
-YTVideo.prototype.get = function(message, callback)
+var YouTubeVideo = function() {};
+YouTubeVideo.prototype.get = function(videoTitle, videoAuthor, callback)
 {
-
 	var MySQL 	= mysql.createConnection({host: config.mysql.host, user: config.mysql.username, password: config.mysql.password, database: config.mysql.database});
-	var regex = new RegExp(/^\[\[.*\]\]$/); // IS LOOKING FOR SOMETHING LIKE [[USERNAME]]
-	var messageSplit = message.split(' ');
-
-	// SETTING  'USERNAME' && 'TITLE' VARS
-	if(messageSplit[1].match(regex))
-	{
-		var username = messageSplit[1].replace('[[', '').replace(']]', '')
-		var title 	 = message.replace('/video:get [[' + username + ']]', '').substr(1);
-	}
-	else
-	{
-		var username = false;
-		var title 	 = message.replace('/video:get', '').substr(1);
-	}
 
 	// CHANGING SQL DEPENDING ON [[USERNAME]]
-	var query = (username) ? ("SELECT * FROM youtube_video WHERE title LIKE '%" + title + "%' AND username LIKE '%" + username + "%'") : ("SELECT * FROM youtube_video WHERE title LIKE '%" + title + "%'");
+	var query = (videoAuthor) ? ("SELECT * FROM youtube_video WHERE video_title LIKE '%" + videoTitle + "%' AND video_author LIKE '%" + videoAuthor + "%'") : ("SELECT * FROM youtube_video WHERE video_title LIKE '%" + videoTitle + "%'");
 
 	// MYSQL REQUEST + DATA TREATMENT
 	var data = {};
@@ -44,57 +29,51 @@ YTVideo.prototype.get = function(message, callback)
 	MySQL.end(function(error){
 		callback(data);
 	});
+}
 
-};
-
-
-YTVideo.prototype.add = function(message, username, callback)
+YouTubeVideo.prototype.add = function(videoID, discordUsername, callback)
 {
 
-	var regex = new RegExp(/^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/); // IS LOOKING FOR A YOUTUBE.COM / YOUTU.BE LINK
-	id = (message.match(regex)) ? message.substring(message.indexOf("=") + 1) : null; // CHECKING LINK
-
-	if(id)
+	var data;
+	var MySQL = mysql.createConnection({host: config.mysql.host, user: config.mysql.username, password: config.mysql.password, database: config.mysql.database});
+	MySQL.query("SELECT * FROM youtube_video WHERE video_id=?", [videoID], function(errors, rows, fields)
 	{
-		var MySQL = mysql.createConnection({host: config.mysql.host, user: config.mysql.username, password: config.mysql.password, database: config.mysql.database});
+		if(!errors && !(rows.length)) // IF NO ERRORS && NO ENTRY IN DB
+		{
+			var YouTubeAPI = new youtube();
 
-		// CHECKING IF VIDEO IS ALREADY IN DB
-		MySQL.query("SELECT * FROM youtube_video WHERE url=?", [message], function(error, rows, fields){
-			if(!rows.length >=1)
+			YouTubeAPI.setKey(config.youtube.key);
+			YouTubeAPI.getById(videoID, function(error, result)
 			{
-				var YouTube = new youtube();
-				var data 	= {};
 
-				YouTube.setKey(config.youtube.key);
-				YouTube.getById(id, function(error, result){
-					if(!error)
+				data = {
+					'title': result.items[0].snippet.title,
+					'author': result.items[0].snippet.channelTitle,
+					'url': 'https://www.youtube.com/watch?v=' + videoID
+				}
+				MySQL.query("INSERT INTO youtube_video SET id=?, video_id=?, video_title=?, video_author=?, created_at=?, created_by=?", ['', videoID, data.title, data.author, moment().format("DD/MM/YYYY"), discordUsername], function(errors){
+					MySQL.end(function(error)
 					{
-						data = {
-							title: result.items[0].snippet.title,
-							username: result.items[0].snippet.channelTitle
-						};
-						MySQL.query("INSERT INTO youtube_video SET id=?, title=?, username=?, url=?, created_at=?, created_by=?", ['', result.items[0].snippet.title, result.items[0].snippet.channelTitle, message, moment().format("DD/MM/YYYY"), username], function(error)
-						{
-							MySQL.end(function(error)
-							{
-								callback(data, error);
-							});	
-						});
-					}
+						callback(data);
+					});	
 				});
-			}
-			else
-			{
-				data = rows[0];
-				MySQL.end(function(error)
-				{
-					callback(data, error);
-				});					
-			}
-		});
-
-	}
+			});
+		}
+		else if(!errors && rows.length)
+		{
+			var data = {
+				'title': rows[0].video_title,
+				'author': rows[0].video_author,
+				'url': 'https://www.youtube.com/watch?v=' + rows[0].video_id
+			};
+		}
+		else
+		{
+			console.log(errors);
+		}
+	});
 
 }
 
-exports.YTVideo = YTVideo;
+
+exports.YouTubeVideo = YouTubeVideo;
