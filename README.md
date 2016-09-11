@@ -1,17 +1,19 @@
-## INFORMATIONS
-This is my first NODEJS project.
-It may be bad written and will most probably crash at some point.
-**You most probably don't want to use it but you can still use parts of this though.**
+## TiCubius/TRASHBOT [VERSION: 2.01]
+A discord bot, built in NodeJS thanks to discordie
 
-### UTILIZATION
-To use this, you need to put in the config/config.json file : 
-- A discord account
-- A MySQL/Maria database (table: youtube_video which contains id, video_id, video_author, video_title, created_at, created_by)
-- An YouTube API key
+# UTILIZATION
+You need to :
+- Put your DISCORD TOKEN in lib/routes.js
+- Put your MUSIC FOLDER in lib/discord_bot.js
 
-### COMMANDS
-- /video:get [[USERNAME]] TITLE
-- /video:get TITLE
-- https://youtube.com/watch?v=
-- /chat:clear
-- /clear:chat
+Your MUSIC FOLDER may be built this way :
+- music folder
+  - PlaylistName
+    - music
+    - music
+  - PlaylistName
+    - music
+    - music
+
+It may not be the best music bot of all time and won't probably help you in any way.
+If you require any information, I'll be glad to give you some.
