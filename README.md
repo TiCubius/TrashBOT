@@ -1,5 +1,7 @@
-## TiCubius/TRASHBOT [VERSION: 2.01]
+## TiCubius/TRASHBOT [VERSION: 2.01][DEPRECATED]
 A discord bot, built in NodeJS thanks to discordie
+
+**WARNING: This code in NOT maintained anymore and can be considered as deprecated. Please use @discordie's official example which contains most of this code**
 
 # UTILIZATION
 You need to :
