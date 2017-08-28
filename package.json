@@ -1,25 +1,13 @@
 {
-  "name": "tm-discord",
-  "version": "2.0.0",
-  "description": "",
-  "main": "app.js",
+  "name": "TrashBOT",
+  "version": "2.1.0",
+  "main": "bot.js",
+  "author": "TiCubius <trashmates@protonmail.com>",
+  "license": "GNU General Public License v3.0",
   "dependencies": {
-    "discordie": "^0.8.1",
-    "lame": "^1.2.4",
-    "recursive-readdir": "^2.0.0"
-  },
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/TiCubius/discord-bot.git"
-  },
-  "author": "TiCubius",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/TiCubius/discord/issues"
-  },
-  "homepage": "https://github.com/TiCubius/discord#readme"
+    "colors": "^1.1.2",
+    "discord.js": "^11.1.0",
+    "mysql": "^2.14.1",
+    "tmi.js": "^1.2.1"
+  }
 }

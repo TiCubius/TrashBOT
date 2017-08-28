@@ -1,21 +1,14 @@
-## TiCubius/TRASHBOT [VERSION: 2.01][DEPRECATED]
-A discord bot, built in NodeJS thanks to discordie
+## TiCubius/TRASHBOT [VERSION: 2.10]
+A discord bot, built in NodeJS thanks to discord.js
 
-**WARNING: This code in NOT maintained anymore and can be considered as deprecated. Please use @discordie's official example which contains most of this code**
+# What ?
+This is a simple bot, that saves all the messages posted in a Discord server and a Twitch chat.
+Every Twitch chatters/followers (up to 1000) and Discord members (up to 1000) will be registered in the database.
 
-# UTILIZATION
+# How-to ?
 You need to :
-- Put your DISCORD TOKEN in lib/routes.js
-- Put your MUSIC FOLDER in lib/discord_bot.js
-
-Your MUSIC FOLDER may be built this way :
-- music folder
-  - PlaylistName
-    - music
-    - music
-  - PlaylistName
-    - music
-    - music
-
-It may not be the best music bot of all time and won't probably help you in any way.
-If you require any information, I'll be glad to give you some.
+- Use the tables.sql to create the correct structure.
+- Copy config/settings.example.js to config/settings.js
+- Fill in the config/settings.js
+- Launch the script the first time with the last 2 lines of bot.js uncommented (wait ~1 minute)
+- Restart the script with the last 2 lines commented.
