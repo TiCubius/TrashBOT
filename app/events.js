@@ -1,139 +1,78 @@
-// TrashBOT - app/event.js
-// VERSION: 2.10 [25/08/2017]
-// AUTHOR: TiCubius <trashmates@protonmail.com>
+// TrashBOT / app/event.js
+// VERSION: 2.15
+// TiCubius <trashmates@protonmail.com>
 
 // MODULES
 const colors   = require("colors")
 
-// SETTINGS & DATABASE
+// SETTINGS
 const database = require("./database.js")
-const sql      = require("../config/sql.js")
+const settings = require("../config/settings.js")
 
 module.exports = class Events
 {
 
-	onModified(type, role, userid, username)
+	/*
+	* ===
+	* - DISCORD EVENTS
+	* ===
+	*/
+
+	discordOnReady()
 	{
-		if (!type || !role || !userid || !username) {return false}
-
-		// Checking if the userid exists.
-		database.query(sql.fetchUser, [userid], (error, results) =>
+		if (settings.debug)
 		{
-			if (error) {console.error("ERROR - onModified:fetchingUser".magenta, error); return false}
-
-			// Yes, the userid is already registered
-			if (results.length == 1)
-			{
-				var user = results[0]
-
-				// We then modify the user
-				database.query(sql.updateUser, [type, role, userid, username, new Date(), user.id], (error) =>
-				{
-					if (error) {console.error("ERROR - onModified:modifyingUser".magenta, error); return false}
-				})
-			}
-			// Nope, we don't know this userid
-			else
-			{
-				// So we add this user to the database
-				database.query(sql.createUser, [type, role, userid, username, new Date()], (error, results) =>
-				{
-					if (error) {console.error("ERROR - onMessage:creatingUser".magenta, error); return false}
-				})
-			}
-		})
-	}
-
-	onMessage(type, userid, username, channel, message, created_at)
-	{
-		if (type == "discord")
-		{
-			channel = "#" + channel
+			console.log(" DISCORD".cyan, "-", "READY".green)
 		}
-
-		console.log(" M".magenta + " " + (new Date().toISOString()).green + " - " + type.magenta + channel.cyan + " - " + username.yellow + ": " + message)
-
-		// Checking if the userid exists.
-		database.query(sql.fetchUser, [userid], (error, results) =>
-		{
-			if (error) {console.error("ERROR - onMessage:fetchingUser".magenta, error); return false}
-
-			// Yes, the userid is already registered
-			if (results.length == 1)
-			{
-				var user = results[0]
-
-				// We then add the message to the database
-				database.query(sql.createMessage, [user.id, username, type, channel, message], (error) =>
-				{
-					if (error) {console.error("ERROR - onMessage:creatingMessage".magenta, error); return false}
-				})
-			}
-			// Nope, we don't know this userid
-			else
-			{
-				// So we add this user to the database
-				database.query(sql.createUser, [type, "Viewers", userid, username, created_at], (error, results) =>
-				{
-					if (error) {console.error("ERROR - onMessage:creatingUser".magenta, error); return false}
-
-					// And then add the message to the database
-					database.query(sql.createMessage, [results.insertId, username, type, channel, message], (error) =>
-					{
-						if (error) {console.error("ERROR - onMessage:creatingMessage".magenta, error); return false}
-					})
-				})
-			}
-		})
 	}
 
-	onSubscription(type, userid, username, channel)
+	discordOnMessage(message)
 	{
-		// Checking if the userid exists.
-		database.query(sql.fetchUser, [userid], (error, results) =>
-		{
-			if (error) {console.error("ERROR - onMessage:fetchingUser".magenta, error); return false}
+		// SETTING UP THE VARIABLES
+		var userid    = message.author.id
+		var username  = message.author.username
+		var channel   = message.channel.name
+		var content   = message.content
+		var createdAt = Date.now()
 
-			// Yes, the userid is already registered
-			if (results.length == 1)
-			{
-				var user = results[0]
-
-				// We then add the message to the database
-				database.query(sql.updateUser, [type, "Subscriber", userid, username, new Date(), user.id], (error, results) =>
-				{
-					if (error) {console.error("ERROR - onMessage:updatingUser".magenta, error); return false}
-				})
-			}
-			// Nope, we don't know this userid
-			else
-			{
-				// So we add this user to the database
-				database.query(sql.createUser, [type, "Subscriber", userid, username, new Date()], (error, results) =>
-				{
-					if (error) {console.error("ERROR - onMessage:creatingUser".magenta, error); return false}
-				})
-			}
-		})
+		// LOGGING TO CONSOLE
+		console.log(" D ".cyan + ("#" + channel).green + ":" + username.green + " - " + content)
 	}
 
-	onCommand(message, callback)
+	/*
+	* ===
+	* - TWITCH EVENTS
+	* ===
+	*/
+
+	twitchOnReady()
 	{
-		var command = message.split(" ")[0]
-
-		// Checking if this is a command
-		if (command[0] === "!")
+		if (settings.debug)
 		{
-			// We check in the database
-			database.query(sql.fetchCommand, [command], (error, response) =>
-			{
-				if (error) {console.error("ERROR - onCommand:checkingDatabase".magenta, error); return false}
-
-				if (response.length) callback(true, response[0].return)
-				else                 callback(false, "")
-			})
+			console.log(" TWITCH".cyan, " -", "READY".green)
 		}
-		else callback(false, "")
+	}
+
+	twitchOnMessage(channel, userstate, content, self)
+	{
+		// SETTING UP THE VARIABLES
+		var userid    = userstate["user-id"]
+		var username  = userstate["display-name"] || userstate["username"]
+		var createdAt = Date.now()
+
+		// LOGGING TO CONSOLE
+		console.log(" T ".cyan + channel.green + ":" + username.green + " - " + content)
+	}
+
+	twitchOnSubscription(channel, username, method, content, userstate)
+	{
+		// SETTING UP THE VARIABLES
+		var userid    = userstate["user-id"]
+		var username  = userstate["display-name"] || userstate["username"]
+		var createdAt = Date.now()
+
+		// LOGGING TO CONSOLE
+		console.log(" S ".red + channel.green + ":" + username.green + " - " + method + " / " + content)
 	}
 
 }
