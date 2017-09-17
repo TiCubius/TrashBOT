@@ -28,13 +28,14 @@ console.log(" AUTHOR:".magenta, "TiCubius <trashmates@protonmail.com>".cyan)
 console.log(" ")
 
 // EVENTS - discord
-discord.on("ready",              ()        => {events.discordOnReady()})
-discord.on("message",            (message) => {events.discordOnMessage(message)})
-discord.on("messageReactionAdd", () => {})
-discord.on("guildMemberUpdate",  () => {})
+discord.on("ready",              ()                     => {events.discordOnReady()})
+discord.on("message",            (message)              => {events.discordOnMessage(message)})
+discord.on("messageReactionAdd", ()                     => {})
+discord.on("guildMemberAdd",     (newMember)            => {events.discordOnGuildMemberAdd(newMember)})
+discord.on("guildMemberUpdate",  (oldMember, newMember) => {events.discordOnGuildMemberUpdate(oldMember, newMember)})
 
 // EVENTS - twitch
+twitch.on("connected",    ()                                              => {events.twitchOnReady()})
 twitch.on("message",      (channel, userstate, content, self)             => {events.twitchOnMessage(channel, userstate, content, self)})
 twitch.on("subscription", (channel, username, method, content, userstate) => {events.twitchOnSubscription(channel, username, method, content, userstate)})
-twitch.on("connected",    ()                                              => {events.twitchOnReady()})
- 
+
